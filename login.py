@@ -2,24 +2,24 @@
 
 import sqlite3
 import bcrypt
-from modules.database import create_connection
+
 
 def login_user(username, password):
-    conn = create_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
-    result = cursor.fetchone()
+    # Use context manager for automatic commit & close
+    with sqlite3.connect("users.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
+        result = cursor.fetchone()
 
     if result:
         stored_password = result[0]
         # Verify password
         if bcrypt.checkpw(password.encode('utf-8'), stored_password):
-            print(f"Login successful! ✅ Welcome, {username}")
+            print(f"Login successful!  Welcome, {username}")
         else:
-            print("Invalid username or password ❌")
+            print("Invalid username or password ")
     else:
-        print("Invalid username or password ❌")
+        print("Invalid username or password ")
     
     conn.close()
 
