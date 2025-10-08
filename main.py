@@ -2,6 +2,7 @@
 
 from register import register_user
 from login import login_user
+from getpass import getpass  #import getpass to hide password in input
 
 def main():
     while True:
@@ -13,11 +14,11 @@ def main():
 
         if choice == "1":
             username = input("Enter username: ")
-            password = input("Enter password: ")
+            password = getpass("Enter password: ")
             register_user(username, password)
         elif choice == "2":
             username = input("Enter username: ")
-            password = input("Enter password: ")
+            password = getpass("Enter password: ")
             login_user(username, password)
         elif choice == "3":
             print("Goodbye!")
