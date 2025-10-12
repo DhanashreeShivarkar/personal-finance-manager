@@ -2,6 +2,7 @@ import sqlite3
 import bcrypt
 import re
 from getpass import getpass
+from datetime import datetime
 
 def is_strong_password(password):
     """Check if the password is strong"""
@@ -26,13 +27,14 @@ def register_user(username, password):
     
     # Hash the password
     hashed_password = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+    created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Use context manager for automatic commit & close
     try:
         with sqlite3.connect("users.db") as conn:
             cursor = conn.cursor()
-            cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, hashed_password))
-            print(f"User '{username}' registered successfully!")
+            cursor.execute("INSERT INTO users (username, password, created_at) VALUES (?, ?, ?)", (username, hashed_password, created_at))
+            print(f"User '{username}' registered successfully at {created_at}!")
     except sqlite3.IntegrityError:
         print(f"Error: Username '{username}' already exists!")
 

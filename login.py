@@ -2,6 +2,8 @@
 
 import sqlite3
 import bcrypt
+from datetime import datetime
+from getpass import getpass
 
 
 def login_user(username, password):
@@ -15,7 +17,12 @@ def login_user(username, password):
         stored_password = result[0]
         # Verify password
         if bcrypt.checkpw(password.encode('utf-8'), stored_password):
-            print(f"Login successful!  Welcome, {username}")
+            last_login = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            cursor.execute(
+                "UPDATE users SET last_login = ? WHERE username = ?",
+                (last_login, username)
+            )
+            print(f"Login successful! Last login updated to {last_login}.  Welcome, {username}")
         else:
             print("Invalid username or password ")
     else:
