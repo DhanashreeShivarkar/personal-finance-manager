@@ -3,7 +3,7 @@ import sqlite3
 def create_connection():
     return sqlite3.connect("users.db")
 
-def create_table():
+def create_tables():
     with sqlite3.connect("users.db") as conn:
         cursor = conn.cursor()
         # Step 1: Create table if it doesn't exist
@@ -14,8 +14,36 @@ def create_table():
                             created_at TEXT NOT NULL DEFAULT (datetime('now')),
                             last_login TEXT
                           )''')
-    print("Database and users table created successfully!")
+        
+        # Expenses table
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS expenses (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            category TEXT NOT NULL,
+            amount REAL NOT NULL,
+            description TEXT,
+            date TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+        """)
+        
+        # Budgets table
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS budgets (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            category TEXT NOT NULL,
+            limit_amount REAL NOT NULL,
+            month TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+        """)
+        conn.commit()
+    
+
 
 # Call create_table when this file is run directly
 if __name__ == "__main__":
-    create_table()
+    create_tables()
+    print("Database and users table created successfully!")

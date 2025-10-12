@@ -22,6 +22,7 @@ def login_user(username, password):
                 "UPDATE users SET last_login = ? WHERE username = ?",
                 (last_login, username)
             )
+            conn.commit()  # ensure the update is saved
             print(f"Login successful! Last login updated to {last_login}.  Welcome, {username}")
         else:
             print("Invalid username or password ")
