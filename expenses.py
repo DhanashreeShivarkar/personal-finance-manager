@@ -22,7 +22,13 @@ def view_expenses(user_id):
         expenses = cursor.fetchall()
 
     if expenses:
-        print(tabulate(expenses, headers=["ID", "Category", "Amount", "Description", "Date"], tablefmt="grid"))
+        # Format amount column to include ₹ symbol
+        formatted_expenses = []
+        for row in expenses:
+            id_, category, amount, description, date = row
+            formatted_amount = f"₹{amount:.2f}"   #shows ₹ and 2 decimal places
+            formatted_expenses.append((id_, category, formatted_amount, description, date))
+        print(tabulate(formatted_expenses, headers=["ID", "Category", "Amount", "Description", "Date"], tablefmt="grid"))
     else:
         print("No expenses found.")
 
