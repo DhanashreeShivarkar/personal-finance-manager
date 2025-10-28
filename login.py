@@ -23,7 +23,7 @@ def login_user(username, password):
                 (last_login, username)
             )
             conn.commit()  # ensure the update is saved
-            
+            print(f"Login successful! Last login updated to {last_login}.  Welcome, {username}")
     
             
             # Step 4: Fetch user_id

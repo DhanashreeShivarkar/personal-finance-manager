@@ -92,7 +92,7 @@ def main():
             user_id = login_user(username, password)
 
             if user_id:
-                print(f"Login successful! Last login updated to {user_id}.  Welcome, {username}")
+                
                 user_dashboard(user_id)  # Open expense dashboard for that user
         elif choice == "3":
             print("Goodbye!")
