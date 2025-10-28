@@ -4,6 +4,8 @@ from register import register_user
 from login import login_user
 from getpass import getpass  #import getpass to hide password in input
 from expenses import add_expense, view_expenses, update_expense, delete_expense
+from reports import monthly_report, yearly_report
+
 
 # =======================
 # Expense Dashboard Menu
@@ -15,7 +17,9 @@ def user_dashboard(user_id):
         print("2. View Expenses")
         print("3. Update Expense")
         print("4. Delete Expense")
-        print("5. Logout")
+        print("5. Monthly Report")
+        print("6. Yearly Report")
+        print("7. Logout")
 
         choice = input("Choose an option: ")
 
@@ -38,8 +42,14 @@ def user_dashboard(user_id):
         elif choice == "4":
             expense_id = int(input("Enter Expense ID to delete: "))
             delete_expense(expense_id)
-
+            
         elif choice == "5":
+            monthly_report(user_id)
+            
+        elif choice == "6":
+            yearly_report(user_id)        
+
+        elif choice == "7":
             print("Logged out successfully!\n")
             break
 
