@@ -5,6 +5,7 @@ from login import login_user
 from getpass import getpass  #import getpass to hide password in input
 from expenses import add_expense, view_expenses, update_expense, delete_expense
 from reports import monthly_report, yearly_report
+from budget import set_budget, view_budgets, check_budget_warnings
 
 
 # =======================
@@ -19,7 +20,10 @@ def user_dashboard(user_id):
         print("4. Delete Expense")
         print("5. Monthly Report")
         print("6. Yearly Report")
-        print("7. Logout")
+        print("7. Set Budget")
+        print("8. View Budgets")
+        print("9. Check Budget Warnings")
+        print("10. Logout")
 
         choice = input("Choose an option: ")
 
@@ -47,9 +51,20 @@ def user_dashboard(user_id):
             monthly_report(user_id)
             
         elif choice == "6":
-            yearly_report(user_id)        
-
+            yearly_report(user_id)   
+            
         elif choice == "7":
+            category = input("Enter category to set budget for: ")
+            limit_amount = float(input("Enter monthly limit (₹): "))
+            set_budget(user_id, category, limit_amount)      
+            
+        elif choice == "8":
+            view_budgets(user_id) 
+            
+        elif choice == "9":
+            check_budget_warnings(user_id)          
+
+        elif choice == "10":
             print("Logged out successfully!\n")
             break
 
