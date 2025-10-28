@@ -86,7 +86,7 @@ def main():
         elif choice == "2":
             username = input("Enter username: ")
             password = getpass("Enter password: ")
-            # login_user(username, password)
+            
             
             #If login is successfull
             user_id = login_user(username, password)

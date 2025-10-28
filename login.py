@@ -24,7 +24,7 @@ def login_user(username, password):
             )
             conn.commit()  # ensure the update is saved
             
-            # print(f"Login successful! Last login updated to {last_login}.  Welcome, {username}")
+    
             
             # Step 4: Fetch user_id
             cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
@@ -43,10 +43,10 @@ def login_user(username, password):
 
     
 
-# if __name__ == "__main__":
-#     username = input("Enter username: ")
-#     password = input("Enter password: ")
-#     login_user(username, password)
-#     user_id = login_user(username, password)
-#     if user_id:
-#         print(f"Your user_id is: {user_id}")
+if __name__ == "__main__":
+    username = input("Enter username: ")
+    password = input("Enter password: ")
+    login_user(username, password)
+    user_id = login_user(username, password)
+    if user_id:
+        print(f"Your user_id is: {user_id}")
