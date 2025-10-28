@@ -35,7 +35,8 @@ def create_tables():
             user_id INTEGER NOT NULL,
             category TEXT NOT NULL,
             limit_amount REAL NOT NULL,
-            month TEXT NOT NULL,
+            month INTEGER NOT NULL,
+            year INTEGER NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users (id)
         )
         """)
