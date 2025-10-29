@@ -40,6 +40,18 @@ def create_tables():
             FOREIGN KEY (user_id) REFERENCES users (id)
         )
         """)
+        
+        # Incomes table
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS incomes (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            source TEXT NOT NULL,
+            amount REAL NOT NULL,
+            date TEXT NOT NULL,
+            FOREIGN KEY (user_id) REFERENCES users (id)
+        )
+        """)
         conn.commit()
     
 
