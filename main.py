@@ -6,6 +6,16 @@ from getpass import getpass  #import getpass to hide password in input
 from expenses import add_expense, view_expenses, update_expense, delete_expense
 from reports import monthly_report, yearly_report
 from budget import set_budget, view_budgets, check_budget_warnings
+from incomes import add_income, view_incomes
+from reports import (
+    monthly_financial_report,
+    yearly_financial_report,
+    savings_insight,
+    export_monthly_report_csv
+)
+from datetime import datetime
+from export_pdf import export_monthly_report_pdf
+
 
 
 # =======================
@@ -18,12 +28,19 @@ def user_dashboard(user_id):
         print("2. View Expenses")
         print("3. Update Expense")
         print("4. Delete Expense")
-        print("5. Monthly Report")
-        print("6. Yearly Report")
+        print("5. Monthly Expenses Report")
+        print("6. Yearly Expenses Report")
         print("7. Set Budget")
         print("8. View Budgets")
         print("9. Check Budget Warnings")
-        print("10. Logout")
+        print("10. Add Income")
+        print("11. View Incomes")
+        print("12. Monthly Financial Report")
+        print("13. Yearly Financial Report")
+        print("14. Savings Insight")
+        print("15. Export Monthly Report CSV")
+        print("16. Export Monthly Report (PDF)")
+        print("17. Logout")
 
         choice = input("Choose an option: ")
 
@@ -62,9 +79,40 @@ def user_dashboard(user_id):
             view_budgets(user_id) 
             
         elif choice == "9":
-            check_budget_warnings(user_id)          
-
+            check_budget_warnings(user_id)   
+            
         elif choice == "10":
+            source = input("Enter income source: ")
+            amount = float(input("Enter amount: "))
+            add_income(user_id, source, amount)
+
+        elif choice == "11":
+            view_incomes(user_id)
+
+        elif choice == "12":
+            monthly_financial_report(user_id)
+
+        elif choice == "13":
+            yearly_financial_report(user_id)
+
+        elif choice == "14":
+            savings_insight(user_id)
+
+        elif choice == "15":
+            month = int(input("Month (1-12) [default current]: ") or datetime.now().month)
+            year = int(input("Year [default current]: ") or datetime.now().year)
+            export_monthly_report_csv(user_id, month, year, filename=f"report_{user_id}_{month}_{year}.csv")
+            
+        elif choice == "16":
+            m = input("Month (1-12) [enter for current]: ")
+            y = input("Year [enter for current]: ")
+            month = int(m) if m.strip() else None
+            year = int(y) if y.strip() else None
+            export_monthly_report_pdf(user_id, month, year)
+    
+           
+
+        elif choice == "17":
             print("Logged out successfully!\n")
             break
 
