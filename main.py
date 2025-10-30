@@ -21,7 +21,7 @@ from export_pdf import export_monthly_report_pdf
 # =======================
 # Expense Dashboard Menu
 # =======================
-def user_dashboard(user_id):
+def expense_management(user_id):
     while True:
         print("\n=== Expense Dashboard ===")
         print("1. Add Expense")
@@ -30,17 +30,8 @@ def user_dashboard(user_id):
         print("4. Delete Expense")
         print("5. Monthly Expenses Report")
         print("6. Yearly Expenses Report")
-        print("7. Set Budget")
-        print("8. View Budgets")
-        print("9. Check Budget Warnings")
-        print("10. Add Income")
-        print("11. View Incomes")
-        print("12. Monthly Financial Report")
-        print("13. Yearly Financial Report")
-        print("14. Savings Insight")
-        print("15. Export Monthly Report CSV")
-        print("16. Export Monthly Report (PDF)")
-        print("17. Logout")
+        print("0. Back to Main Menu")
+        
 
         choice = input("Choose an option: ")
 
@@ -70,55 +61,166 @@ def user_dashboard(user_id):
         elif choice == "6":
             yearly_report(user_id)   
             
-        elif choice == "7":
+        elif choice == "0":
+            break
+
+        else:
+            print("Invalid option, please try again.")
+            
+# ======================
+# Budget Management Menu
+# ======================
+def budget_management(user_id):
+    while True:
+        print("\n--- Budget Management ---")
+        print("1. Set Budget")
+        print("2. View Budgets")
+        print("3. Check Budget Warnings")
+        print("0. Back to Main Menu")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
             category = input("Enter category to set budget for: ")
             limit_amount = float(input("Enter monthly limit (₹): "))
-            set_budget(user_id, category, limit_amount)      
+            set_budget(user_id, category, limit_amount)
+
+        elif choice == "2":
+            view_budgets(user_id)
+
+        elif choice == "3":
+            check_budget_warnings(user_id)
+
+        elif choice == "0":
+            break
+
+        else:
+            print("Invalid option, please try again.")
             
-        elif choice == "8":
-            view_budgets(user_id) 
-            
-        elif choice == "9":
-            check_budget_warnings(user_id)   
-            
-        elif choice == "10":
+# =====================
+# Income Management Menu
+# =====================
+def income_management(user_id):
+    while True:
+        print("\n--- Income Management ---")
+        print("1. Add Income")
+        print("2. View Incomes")
+        print("0. Back to Main Menu")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
             source = input("Enter income source: ")
             amount = float(input("Enter amount: "))
             add_income(user_id, source, amount)
 
-        elif choice == "11":
+        elif choice == "2":
             view_incomes(user_id)
 
-        elif choice == "12":
+        elif choice == "0":
+            break
+
+        else:
+            print("Invalid option, please try again.")
+            
+# ======================
+# Financial Reports Menu
+# ======================
+def reports_management(user_id):
+    while True:
+        print("\n--- Financial Reports ---")
+        print("1. Monthly Financial Report")
+        print("2. Yearly Financial Report")
+        print("3. Savings Insight")
+        print("0. Back to Main Menu")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
             monthly_financial_report(user_id)
 
-        elif choice == "13":
+        elif choice == "2":
             yearly_financial_report(user_id)
 
-        elif choice == "14":
+        elif choice == "3":
             savings_insight(user_id)
 
-        elif choice == "15":
+        elif choice == "0":
+            break
+
+        else:
+            print("Invalid option, please try again.")
+            
+# ==========================
+# Data Export / Backup Menu
+# ==========================
+def export_management(user_id):
+    while True:
+        print("\n--- Data Export & Backup ---")
+        print("1. Export Monthly Report (CSV)")
+        print("2. Export Monthly Report (PDF)")
+        print("0. Back to Main Menu")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
             month = int(input("Month (1-12) [default current]: ") or datetime.now().month)
             year = int(input("Year [default current]: ") or datetime.now().year)
             export_monthly_report_csv(user_id, month, year, filename=f"report_{user_id}_{month}_{year}.csv")
-            
-        elif choice == "16":
+
+        elif choice == "2":
             m = input("Month (1-12) [enter for current]: ")
             y = input("Year [enter for current]: ")
             month = int(m) if m.strip() else None
             year = int(y) if y.strip() else None
             export_monthly_report_pdf(user_id, month, year)
-    
-           
 
-        elif choice == "17":
+        elif choice == "0":
+            break
+
+        else:
+            print("Invalid option, please try again.")
+            
+# ===========================
+# Main User Dashboard (after login)
+# ===========================
+def user_dashboard(user_id):
+    while True:
+        print("\n=== PERSONAL FINANCE MANAGER DASHBOARD ===")
+        print("1. Expense Management")
+        print("2. Budget Management")
+        print("3. Income Management")
+        print("4. Financial Reports")
+        print("5. Data Export & Backup")
+        print("6. Logout")
+
+        choice = input("Choose an option: ")
+
+        if choice == "1":
+            expense_management(user_id)
+
+        elif choice == "2":
+            budget_management(user_id)
+
+        elif choice == "3":
+            income_management(user_id)
+
+        elif choice == "4":
+            reports_management(user_id)
+
+        elif choice == "5":
+            export_management(user_id)
+
+        elif choice == "6":
             print("Logged out successfully!\n")
             break
 
         else:
             print("Invalid option, please try again.")
-
+                                                
+# =======================
+# Main Entry Point
+# =======================
 def main():
     while True:
         print("\n=== Personal Finance Manager ===")
