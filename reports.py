@@ -126,7 +126,16 @@ def monthly_financial_report(user_id, month=None, year=None):
         print("\nNo category-wise expenses for this month.")
 
     # Return numeric metrics for programmatic use
-    return {"income": total_inc, "expenses": total_exp, "savings": savings, "month": month, "year": year}
+    report_str = f"Total Income: ₹{total_inc:.2f}\nTotal Expenses: ₹{total_exp:.2f}\nSavings: ₹{savings:.2f}"
+    return {
+        "report_str": report_str,
+        "month": month,
+        "year": year,
+        "income": total_inc,
+        "expenses": total_exp,
+        "savings": savings
+    }
+
 
 def yearly_financial_report(user_id, year=None):
     """Prints and returns yearly totals: income, expenses, savings (and monthly expense totals)."""
@@ -179,7 +188,13 @@ def savings_insight(user_id, month=None, year=None):
         print("\n You're breaking even this month.")
     else:
         print(f"\n Good job — you saved ₹{savings:.2f} this month.")
-    return res
+    return {
+        "Month": res["month"],
+        "Year": res["year"],
+        "Income": res["income"],
+        "Expenses": res["expenses"],
+        "Savings": res["savings"]
+    }
 
 def export_monthly_report_csv(user_id, month=None, year=None, filename=None):
     """Export monthly numeric summary and category rows to CSV. Returns filename."""

@@ -37,6 +37,7 @@ def register_user(username, password):
             print(f"User '{username}' registered successfully at {created_at}!")
     except sqlite3.IntegrityError:
         print(f"Error: Username '{username}' already exists!")
+        return True  
 
 
 if __name__ == "__main__":

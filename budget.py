@@ -46,8 +46,10 @@ def view_budgets(user_id):
 
     if budgets:
         print(tabulate(budgets, headers=["Category", "Limit (₹)", "Month", "Year"], tablefmt="grid"))
+        return budgets  # Return the list of budgets for testing & logic use
     else:
         print("No budgets found.")
+        return []  # Return an empty list instead of None
 
 
 # 3. Check for budget warning
@@ -71,10 +73,15 @@ def check_budget_warnings(user_id):
             GROUP BY b.category, b.limit_amount
         """, (user_id,))
         results = cursor.fetchall()
+    warnings = []  # Create a list to collect messages    
 
     for category, limit_amount, total_spent in results:
         if total_spent > limit_amount:
             print(f"⚠️ Warning: You have exceeded your budget for {category}! "
                   f"Spent ₹{total_spent:.2f} / ₹{limit_amount:.2f}")
         else:
-            print(f"{category}: ₹{total_spent:.2f} / ₹{limit_amount:.2f} within budget.")
+            msg = (f"{category}: ₹{total_spent:.2f} / ₹{limit_amount:.2f} within budget.")
+        print(msg)
+        warnings.append(msg)  # Collect each message in the list    
+        
+    return warnings  # Return the list so tests can validate it    

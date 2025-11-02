@@ -24,5 +24,7 @@ def view_incomes(user_id):
         # format amount with ₹
         formatted = [(r[0], r[1], f"₹{r[2]:.2f}", r[3]) for r in rows]
         print(tabulate(formatted, headers=["ID", "Source", "Amount", "Date"], tablefmt="grid"))
+        return formatted  # Return formatted results for tests
     else:
         print("No incomes found.")
+        return []  # Return empty list instead of None

@@ -29,8 +29,10 @@ def view_expenses(user_id):
             formatted_amount = f"₹{amount:.2f}"   #shows ₹ and 2 decimal places
             formatted_expenses.append((id_, category, formatted_amount, description, date))
         print(tabulate(formatted_expenses, headers=["ID", "Category", "Amount", "Description", "Date"], tablefmt="grid"))
+        return formatted_expenses  # Return the formatted list for tests
     else:
         print("No expenses found.")
+        return []  # Return an empty list instead of None
 
 # 3. Update an existing expense
 def update_expense(expense_id, new_category, new_amount, new_description):
