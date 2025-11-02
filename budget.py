@@ -73,12 +73,17 @@ def check_budget_warnings(user_id):
             GROUP BY b.category, b.limit_amount
         """, (user_id,))
         results = cursor.fetchall()
-    warnings = []  # Create a list to collect messages    
-
+    warnings = []  # Create a list to collect messages  
+    
+    if not results:
+        print("No budgets set yet.")
+        return  
+    
+    print("\n=== Budget Status ===")
     for category, limit_amount, total_spent in results:
         if total_spent > limit_amount:
-            print(f"⚠️ Warning: You have exceeded your budget for {category}! "
-                  f"Spent ₹{total_spent:.2f} / ₹{limit_amount:.2f}")
+            msg = (f"⚠️ Warning: You have exceeded your budget for {category}! "
+                   f"Spent ₹{total_spent:.2f} / ₹{limit_amount:.2f}")
         else:
             msg = (f"{category}: ₹{total_spent:.2f} / ₹{limit_amount:.2f} within budget.")
         print(msg)
