@@ -15,6 +15,7 @@ from reports import (
 )
 from datetime import datetime
 from export_pdf import export_monthly_report_pdf
+from validators import get_non_empty_input, get_positive_float, get_valid_month, get_valid_year
 
 
 
@@ -33,27 +34,98 @@ def expense_management(user_id):
         print("0. Back to Main Menu")
         
 
-        choice = input("Choose an option: ")
+        choice = input("Choose an option: ").strip()
 
         if choice == "1":
-            category = input("Enter category: ")
-            amount = float(input("Enter amount: "))
-            description = input("Enter description: ")
+            # Validate Category
+            while True:
+                category = input("Enter category: ").strip()
+                if not category:
+                    print("Category cannot be empty. Please enter a valid category.")
+                elif not category.replace(" ", "").isalpha():
+                    print("Category should only contain letters (e.g., Food, Travel).")
+                else:
+                    break
+
+            # Validate Amount
+            while True:
+                amount_input = input("Enter amount: ").strip()
+                if not amount_input:
+                    print("Please enter an amount.")
+                    continue
+                try:
+                    amount = float(amount_input)
+                    if amount <= 0:
+                        print("Amount must be positive.")
+                        continue
+                    break
+                except ValueError:
+                    print("Invalid input. Please enter a numeric amount.")
+
+            # Validate Description
+            while True:
+                description = input("Enter description: ").strip()
+                if not description:
+                    print("Description cannot be empty.")
+                else:
+                    break
+
             add_expense(user_id, category, amount, description)
+            print(f"Expense added successfully for user ID {user_id}.\n")
 
         elif choice == "2":
             view_expenses(user_id)
 
         elif choice == "3":
-            expense_id = int(input("Enter Expense ID to update: "))
-            new_category = input("Enter new category: ")
-            new_amount = float(input("Enter new amount: "))
-            new_description = input("Enter new description: ")
+            try:
+                expense_id = int(input("Enter Expense ID to update: ").strip())
+            except ValueError:
+                print("Invalid Expense ID.")
+                continue
+
+            # Validate new category
+            while True:
+                new_category = input("Enter new category: ").strip()
+                if not new_category:
+                    print("Category cannot be empty.")
+                elif not new_category.replace(" ", "").isalpha():
+                    print("Category should only contain letters.")
+                else:
+                    break
+
+            # Validate new amount
+            while True:
+                new_amount_input = input("Enter new amount: ").strip()
+                if not new_amount_input:
+                    print("Amount cannot be empty.")
+                    continue
+                try:
+                    new_amount = float(new_amount_input)
+                    if new_amount <= 0:
+                        print("Amount must be positive.")
+                        continue
+                    break
+                except ValueError:
+                    print("Invalid amount. Please enter a numeric value.")
+
+            # Validate new description
+            while True:
+                new_description = input("Enter new description: ").strip()
+                if not new_description:
+                    print("Description cannot be empty.")
+                else:
+                    break
+
             update_expense(expense_id, new_category, new_amount, new_description)
+            print("Expense updated successfully.")
 
         elif choice == "4":
-            expense_id = int(input("Enter Expense ID to delete: "))
-            delete_expense(expense_id)
+            try:
+                expense_id = int(input("Enter Expense ID to delete: ").strip())
+                delete_expense(expense_id)
+                print("Expense deleted successfully.")
+            except ValueError:
+                print("Invalid Expense ID.")
             
         elif choice == "5":
             monthly_report(user_id)
@@ -62,6 +134,7 @@ def expense_management(user_id):
             yearly_report(user_id)   
             
         elif choice == "0":
+            print("Returning to Main Menu...")
             break
 
         else:
@@ -78,12 +151,38 @@ def budget_management(user_id):
         print("3. Check Budget Warnings")
         print("0. Back to Main Menu")
 
-        choice = input("Choose an option: ")
+        choice = input("Choose an option: ").strip()
 
         if choice == "1":
-            category = input("Enter category to set budget for: ")
-            limit_amount = float(input("Enter monthly limit (₹): "))
+            # ----- Set Budget -----
+            while True:
+                category = input("Enter category to set budget for: ").strip()
+                if not category:
+                    print("Category cannot be empty.")
+                    continue
+                elif not category.replace(" ", "").isalpha():
+                    print("Category must contain only letters.")
+                    continue
+                else:
+                    break
+
+            # Validate limit amount
+            while True:
+                limit_input = input("Enter monthly limit (₹): ").strip()
+                if not limit_input:
+                    print("Limit amount cannot be empty.")
+                    continue
+                try:
+                    limit_amount = float(limit_input)
+                    if limit_amount <= 0:
+                        print("Limit amount must be positive.")
+                        continue
+                    break
+                except ValueError:
+                    print("Invalid amount entered. Please enter a numeric value.")
+
             set_budget(user_id, category, limit_amount)
+            print(f"Budget set successfully for {category} (₹{limit_amount:.2f}).")
 
         elif choice == "2":
             view_budgets(user_id)
@@ -92,6 +191,7 @@ def budget_management(user_id):
             check_budget_warnings(user_id)
 
         elif choice == "0":
+            print("Returning to Main Menu...")
             break
 
         else:
@@ -107,17 +207,18 @@ def income_management(user_id):
         print("2. View Incomes")
         print("0. Back to Main Menu")
 
-        choice = input("Choose an option: ")
+        choice = input("Choose an option: ").strip()
 
         if choice == "1":
-            source = input("Enter income source: ")
-            amount = float(input("Enter amount: "))
+            source = get_non_empty_input("Enter income source: ")
+            amount = get_positive_float("Enter amount: ")
             add_income(user_id, source, amount)
 
         elif choice == "2":
             view_incomes(user_id)
 
         elif choice == "0":
+            print("Returning to Main Menu...")
             break
 
         else:
@@ -134,7 +235,7 @@ def reports_management(user_id):
         print("3. Savings Insight")
         print("0. Back to Main Menu")
 
-        choice = input("Choose an option: ")
+        choice = input("Choose an option: ").strip()
 
         if choice == "1":
             monthly_financial_report(user_id)
@@ -146,6 +247,7 @@ def reports_management(user_id):
             savings_insight(user_id)
 
         elif choice == "0":
+            print("Returning to Main Menu...")
             break
 
         else:
@@ -161,21 +263,22 @@ def export_management(user_id):
         print("2. Export Monthly Report (PDF)")
         print("0. Back to Main Menu")
 
-        choice = input("Choose an option: ")
+        choice = input("Choose an option: ").strip()
 
         if choice == "1":
-            month = int(input("Month (1-12) [default current]: ") or datetime.now().month)
-            year = int(input("Year [default current]: ") or datetime.now().year)
+            month = get_valid_month("Month (1-12) [default current]: ") or datetime.now().month
+            year = get_valid_year("Year [default current]: ") or datetime.now().year
             export_monthly_report_csv(user_id, month, year, filename=f"report_{user_id}_{month}_{year}.csv")
 
         elif choice == "2":
-            m = input("Month (1-12) [enter for current]: ")
-            y = input("Year [enter for current]: ")
+            m = get_valid_month("Month (1-12) [enter for current]: ")
+            y = get_valid_year("Year [enter for current]: ")
             month = int(m) if m.strip() else None
             year = int(y) if y.strip() else None
             export_monthly_report_pdf(user_id, month, year)
 
         elif choice == "0":
+            print("Returning to Main Menu...")
             break
 
         else:
