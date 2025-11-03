@@ -2,6 +2,7 @@ import sqlite3
 from datetime import datetime
 from tabulate import tabulate
 
+
 # 1. Set or update a budget
 def set_budget(user_id, category, limit_amount, month=None, year=None):
     now = datetime.now()
@@ -12,24 +13,35 @@ def set_budget(user_id, category, limit_amount, month=None, year=None):
         cursor = conn.cursor()
 
         # Check if a budget for this category already exists
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT id FROM budgets WHERE user_id = ? AND category = ? AND month = ? AND year = ?
-        """, (user_id, category, month, year))
+        """,
+            (user_id, category, month, year),
+        )
         result = cursor.fetchone()
 
         if result:
             # Update existing budget
-            cursor.execute("""
+            cursor.execute(
+                """
                 UPDATE budgets SET limit_amount = ? WHERE id = ?
-            """, (limit_amount, result[0]))
+            """,
+                (limit_amount, result[0]),
+            )
             print(f"Updated budget for {category} to ₹{limit_amount:.2f}")
         else:
             # Insert new budget
-            cursor.execute("""
+            cursor.execute(
+                """
                 INSERT INTO budgets (user_id, category, limit_amount, month, year)
                 VALUES (?, ?, ?, ?, ?)
-            """, (user_id, category, limit_amount, month, year))
-            print(f"Set budget for {category} to ₹{limit_amount:.2f} for {month}/{year}")
+            """,
+                (user_id, category, limit_amount, month, year),
+            )
+            print(
+                f"Set budget for {category} to ₹{limit_amount:.2f} for {month}/{year}"
+            )
 
         conn.commit()
 
@@ -38,14 +50,23 @@ def set_budget(user_id, category, limit_amount, month=None, year=None):
 def view_budgets(user_id):
     with sqlite3.connect("users.db") as conn:
         cursor = conn.cursor()
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT category, limit_amount, month, year
             FROM budgets WHERE user_id = ?
-        """, (user_id,))
+        """,
+            (user_id,),
+        )
         budgets = cursor.fetchall()
 
     if budgets:
-        print(tabulate(budgets, headers=["Category", "Limit (₹)", "Month", "Year"], tablefmt="grid"))
+        print(
+            tabulate(
+                budgets,
+                headers=["Category", "Limit (₹)", "Month", "Year"],
+                tablefmt="grid",
+            )
+        )
         return budgets  # Return the list of budgets for testing & logic use
     else:
         print("No budgets found.")
@@ -61,7 +82,8 @@ def check_budget_warnings(user_id):
     with sqlite3.connect("users.db") as conn:
         cursor = conn.cursor()
         # For each budget, compare with total spent in same category and month
-        cursor.execute("""
+        cursor.execute(
+            """
             SELECT b.category, b.limit_amount, IFNULL(SUM(e.amount), 0)
             FROM budgets b
             LEFT JOIN expenses e
@@ -71,22 +93,26 @@ def check_budget_warnings(user_id):
                AND strftime('%Y', e.date) = CAST(b.year AS TEXT)
             WHERE b.user_id = ?
             GROUP BY b.category, b.limit_amount
-        """, (user_id,))
+        """,
+            (user_id,),
+        )
         results = cursor.fetchall()
-    warnings = []  # Create a list to collect messages  
-    
+    warnings = []  # Create a list to collect messages
+
     if not results:
         print("No budgets set yet.")
-        return  
-    
+        return
+
     print("\n=== Budget Status ===")
     for category, limit_amount, total_spent in results:
         if total_spent > limit_amount:
-            msg = (f"⚠️ Warning: You have exceeded your budget for {category}! "
-                   f"Spent ₹{total_spent:.2f} / ₹{limit_amount:.2f}")
+            msg = (
+                f"⚠️ Warning: You have exceeded your budget for {category}! "
+                f"Spent ₹{total_spent:.2f} / ₹{limit_amount:.2f}"
+            )
         else:
-            msg = (f"{category}: ₹{total_spent:.2f} / ₹{limit_amount:.2f} within budget.")
+            msg = f"{category}: ₹{total_spent:.2f} / ₹{limit_amount:.2f} within budget."
         print(msg)
-        warnings.append(msg)  # Collect each message in the list    
-        
-    return warnings  # Return the list so tests can validate it    
+        warnings.append(msg)  # Collect each message in the list
+
+    return warnings  # Return the list so tests can validate it

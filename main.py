@@ -2,7 +2,7 @@
 
 from register import register_user
 from login import login_user
-from getpass import getpass  #import getpass to hide password in input
+from getpass import getpass  # import getpass to hide password in input
 from expenses import add_expense, view_expenses, update_expense, delete_expense
 from reports import monthly_report, yearly_report
 from budget import set_budget, view_budgets, check_budget_warnings
@@ -11,12 +11,16 @@ from reports import (
     monthly_financial_report,
     yearly_financial_report,
     savings_insight,
-    export_monthly_report_csv
+    export_monthly_report_csv,
 )
 from datetime import datetime
 from export_pdf import export_monthly_report_pdf
-from validators import get_non_empty_input, get_positive_float, get_valid_month, get_valid_year
-
+from validators import (
+    get_non_empty_input,
+    get_positive_float,
+    get_valid_month,
+    get_valid_year,
+)
 
 
 # =======================
@@ -32,7 +36,6 @@ def expense_management(user_id):
         print("5. Monthly Expenses Report")
         print("6. Yearly Expenses Report")
         print("0. Back to Main Menu")
-        
 
         choice = input("Choose an option: ").strip()
 
@@ -126,20 +129,21 @@ def expense_management(user_id):
                 print("Expense deleted successfully.")
             except ValueError:
                 print("Invalid Expense ID.")
-            
+
         elif choice == "5":
             monthly_report(user_id)
-            
+
         elif choice == "6":
-            yearly_report(user_id)   
-            
+            yearly_report(user_id)
+
         elif choice == "0":
             print("Returning to Main Menu...")
             break
 
         else:
             print("Invalid option, please try again.")
-            
+
+
 # ======================
 # Budget Management Menu
 # ======================
@@ -196,7 +200,8 @@ def budget_management(user_id):
 
         else:
             print("Invalid option, please try again.")
-            
+
+
 # =====================
 # Income Management Menu
 # =====================
@@ -223,7 +228,8 @@ def income_management(user_id):
 
         else:
             print("Invalid option, please try again.")
-            
+
+
 # ======================
 # Financial Reports Menu
 # ======================
@@ -252,7 +258,8 @@ def reports_management(user_id):
 
         else:
             print("Invalid option, please try again.")
-            
+
+
 # ==========================
 # Data Export / Backup Menu
 # ==========================
@@ -266,9 +273,14 @@ def export_management(user_id):
         choice = input("Choose an option: ").strip()
 
         if choice == "1":
-            month = get_valid_month("Month (1-12) [default current]: ") or datetime.now().month
+            month = (
+                get_valid_month("Month (1-12) [default current]: ")
+                or datetime.now().month
+            )
             year = get_valid_year("Year [default current]: ") or datetime.now().year
-            export_monthly_report_csv(user_id, month, year, filename=f"report_{user_id}_{month}_{year}.csv")
+            export_monthly_report_csv(
+                user_id, month, year, filename=f"report_{user_id}_{month}_{year}.csv"
+            )
 
         elif choice == "2":
             m = get_valid_month("Month (1-12) [enter for current]: ")
@@ -283,7 +295,8 @@ def export_management(user_id):
 
         else:
             print("Invalid option, please try again.")
-            
+
+
 # ===========================
 # Main User Dashboard (after login)
 # ===========================
@@ -320,7 +333,8 @@ def user_dashboard(user_id):
 
         else:
             print("Invalid option, please try again.")
-                                                
+
+
 # =======================
 # Main Entry Point
 # =======================
@@ -339,19 +353,19 @@ def main():
         elif choice == "2":
             username = input("Enter username: ")
             password = getpass("Enter password: ")
-            
-            
-            #If login is successfull
+
+            # If login is successfull
             user_id = login_user(username, password)
 
             if user_id:
-                
+
                 user_dashboard(user_id)  # Open expense dashboard for that user
         elif choice == "3":
             print("Goodbye!")
             break
         else:
             print("Invalid choice. Try again.")
+
 
 if __name__ == "__main__":
     main()

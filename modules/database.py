@@ -1,22 +1,27 @@
 import sqlite3
 
+
 def create_connection():
     return sqlite3.connect("users.db")
+
 
 def create_tables():
     with sqlite3.connect("users.db") as conn:
         cursor = conn.cursor()
         # Step 1: Create table if it doesn't exist
-        cursor.execute('''CREATE TABLE IF NOT EXISTS users (
+        cursor.execute(
+            """CREATE TABLE IF NOT EXISTS users (
                             id INTEGER PRIMARY KEY AUTOINCREMENT,
                             username TEXT NOT NULL UNIQUE,
                             password BLOB NOT NULL,
                             created_at TEXT NOT NULL DEFAULT (datetime('now')),
                             last_login TEXT
-                          )''')
-        
+                          )"""
+        )
+
         # Expenses table
-        cursor.execute("""
+        cursor.execute(
+            """
         CREATE TABLE IF NOT EXISTS expenses (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
@@ -26,10 +31,12 @@ def create_tables():
             date TEXT NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users (id)
         )
-        """)
-        
+        """
+        )
+
         # Budgets table
-        cursor.execute("""
+        cursor.execute(
+            """
         CREATE TABLE IF NOT EXISTS budgets (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
@@ -39,10 +46,12 @@ def create_tables():
             year INTEGER NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users (id)
         )
-        """)
-        
+        """
+        )
+
         # Incomes table
-        cursor.execute("""
+        cursor.execute(
+            """
         CREATE TABLE IF NOT EXISTS incomes (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
@@ -51,9 +60,9 @@ def create_tables():
             date TEXT NOT NULL,
             FOREIGN KEY (user_id) REFERENCES users (id)
         )
-        """)
+        """
+        )
         conn.commit()
-    
 
 
 # Call create_table when this file is run directly

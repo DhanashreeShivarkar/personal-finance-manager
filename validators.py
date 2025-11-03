@@ -25,6 +25,7 @@ def get_positive_float(prompt):
 def get_valid_month(prompt="Enter month (1-12): "):
     """Prompt until valid month (1–12)."""
     from datetime import datetime
+
     while True:
         value = input(prompt).strip()
         if not value:
@@ -41,6 +42,7 @@ def get_valid_month(prompt="Enter month (1-12): "):
 def get_valid_year(prompt="Enter year: "):
     """Prompt until valid year."""
     from datetime import datetime
+
     current_year = datetime.now().year
     while True:
         value = input(prompt).strip()

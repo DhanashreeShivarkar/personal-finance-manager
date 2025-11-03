@@ -16,16 +16,17 @@ def login_user(username, password):
     if result:
         stored_password = result[0]
         # Verify password
-        if bcrypt.checkpw(password.encode('utf-8'), stored_password):
+        if bcrypt.checkpw(password.encode("utf-8"), stored_password):
             last_login = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             cursor.execute(
                 "UPDATE users SET last_login = ? WHERE username = ?",
-                (last_login, username)
+                (last_login, username),
             )
             conn.commit()  # ensure the update is saved
-            print(f"Login successful! Last login updated to {last_login}.  Welcome, {username}")
-    
-            
+            print(
+                f"Login successful! Last login updated to {last_login}.  Welcome, {username}"
+            )
+
             # Step 4: Fetch user_id
             cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
             user_id = cursor.fetchone()[0]
@@ -36,12 +37,11 @@ def login_user(username, password):
             print("Invalid username or password ")
     else:
         print("Invalid username or password ")
-    
+
     conn.close()
-    
+
     return None
 
-    
 
 if __name__ == "__main__":
     username = input("Enter username: ")
