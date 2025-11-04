@@ -2,6 +2,7 @@ import sqlite3
 from datetime import datetime
 from tabulate import tabulate
 import csv
+import os
 
 
 # Monthly Expense Report
@@ -252,7 +253,9 @@ def savings_insight(user_id, month=None, year=None):
         "Savings": res["savings"],
     }
 
-
+# ----------------------
+# export data through csv
+# ----------------------
 def export_monthly_report_csv(user_id, month=None, year=None, filename=None):
     """Export monthly numeric summary and category rows to CSV. Returns filename."""
     res = monthly_financial_report(user_id, month, year)  # prints as well
@@ -288,3 +291,48 @@ def export_monthly_report_csv(user_id, month=None, year=None, filename=None):
 
     print(f"\n CSV exported to {filename}")
     return filename
+
+# ----------------------
+# data restore from csv
+# ----------------------
+def restore_data_from_csv(filepath):
+    """Restore expense data from a CSV backup into the database."""
+    if not os.path.exists(filepath):
+        print("File not found! Please check the path.")
+        return
+
+    conn = sqlite3.connect("users.db")
+    cursor = conn.cursor()
+
+    try:
+        with open(filepath, "r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            rows_added = 0
+
+            for row in reader:
+                # Basic validation
+                if not all([row.get("user_id"), row.get("category"), row.get("amount"), row.get("date")]):
+                    print("Skipping invalid or incomplete record.")
+                    continue
+
+                # Insert data (ignore duplicates)
+                cursor.execute("""
+                    INSERT OR IGNORE INTO expenses (user_id, category, amount, description, date)
+                    VALUES (?, ?, ?, ?, ?)
+                """, (
+                    int(row["user_id"]),
+                    row["category"],
+                    float(row["amount"]),
+                    row.get("description", ""),
+                    row["date"]
+                ))
+                rows_added += 1
+
+            conn.commit()
+            print(f"{rows_added} records restored successfully from '{filepath}'!")
+
+    except Exception as e:
+        print(f"Error while restoring data: {e}")
+
+    finally:
+        conn.close()

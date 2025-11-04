@@ -12,6 +12,7 @@ from reports import (
     yearly_financial_report,
     savings_insight,
     export_monthly_report_csv,
+    restore_data_from_csv,
 )
 from datetime import datetime
 from export_pdf import export_monthly_report_pdf
@@ -268,6 +269,7 @@ def export_management(user_id):
         print("\n--- Data Export & Backup ---")
         print("1. Export Monthly Report (CSV)")
         print("2. Export Monthly Report (PDF)")
+        print("3. Restore Data from CSV Backup")
         print("0. Back to Main Menu")
 
         choice = input("Choose an option: ").strip()
@@ -288,6 +290,10 @@ def export_management(user_id):
             month = int(m) if m.strip() else None
             year = int(y) if y.strip() else None
             export_monthly_report_pdf(user_id, month, year)
+            
+        elif choice == "3":  # 👈 Restore
+            filepath = input("Enter full path to the CSV file to restore: ").strip()
+            restore_data_from_csv(filepath)    
 
         elif choice == "0":
             print("Returning to Main Menu...")
