@@ -62,6 +62,6 @@ Financial Reports:
 Actions- Generate Monthly, Yearly, and Saving insights
 Section 5 -
 Data Export & Backup:	
-Actions- Export reports as CSV or PDF
+Actions- Export reports as CSV or PDF, Restore data through csv files.
 Section 6 -
 Logout
